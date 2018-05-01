@@ -17,7 +17,8 @@ export class CalculatorComponent implements OnInit {
 		this.clearInputRow();
 	}
 	@HostListener('document:keypress', ['$event']) handleKeyboardEvent(event: KeyboardEvent): void {
-		if(this.isDigit(event.key) || (this.isOperator(event.key))) return this.addToInputRow(event.key);
+		if(this.isDigit(event.key) || (this.isOperator(event.key)) || event.key === '.')
+			return this.addToInputRow(event.key);
 		if(event.key === 'Enter' || event.key === '=') return this.showAnswer();
 		if(event.key === 'Backspace' || event.key === 'Delete') return this.clearInputRow();
 		return;
@@ -40,10 +41,11 @@ export class CalculatorComponent implements OnInit {
 	}
 	// Convert a string into <any[]>
 	strToArr(expression: string): any[] {
-		let error: boolean = false, decFrac: boolean = false, negExp: number = 0;
+		console.log(expression);
+		let decFrac: boolean = false, negExp: number = 0;
 		let result = expression
 			.split('')
-			.reduce((arrOut: any[], char): any[] => {
+			.reduce((arrOut: any[], char: any): any[] => {
 				if(this.isDigit(char)) {
 					if(!decFrac) {
 						arrOut[arrOut.length-1] *= 10;
@@ -57,10 +59,6 @@ export class CalculatorComponent implements OnInit {
 					}
 				}
 				if(char === '.' && !decFrac) decFrac = true;
-				if(char === '.' && decFrac) {
-					error = true;
-					return;
-				}
 				if(this.isOperator(char)) {
 					arrOut.push(char);
 					arrOut.push(0);
@@ -69,8 +67,7 @@ export class CalculatorComponent implements OnInit {
 				}
 				return arrOut;
 			}, [0]);
-		if(error) return undefined;
-		else return result;
+		return result;
 	}
 	// Turn <any[]> to Reverse Polish Notation
 	toPostfix(expression: any[]): any[] {
