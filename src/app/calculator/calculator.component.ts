@@ -137,9 +137,10 @@ export class CalculatorComponent implements OnInit {
 		this.input += char;
 	}
 	showError(): void {
+		const that = this;
 		this.clearInputRow();
 		this.addToInputRow(ERROR_MESSAGE);
-		setTimeout(this.clearInputRow, 1500);
+		setTimeout(text => that.input = text, 1500, '');
 	}
 	showAnswer(): void {
 		const result = this.calculate(this.input);
