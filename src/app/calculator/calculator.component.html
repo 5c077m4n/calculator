@@ -1,24 +1,24 @@
 <div id="calculator" class="Rtable Rtable--3cols" name="calculator" (keydown)="onKeydown($event)">
 	<!-- <input type="text" id="history" class="Rtable-result" disabled /> -->
-	<input type="text" id="result" class="Rtable-result" value={{input}} (keydown)="onKeydown($event)" disabled />
+	<input type="text" id="result" class="Rtable-result" value="{{input}}" disabled />
 	<button class="Rtable-cell" (click)="clearInputRow();">Clear</button>
-	<button class="Rtable-cell" (click)="addToInputRow('1')">1</button>
-	<button class="Rtable-cell" (click)="addToInputRow('2')">2</button>
-	<button class="Rtable-cell" (click)="addToInputRow('3')">3</button>
-	<button class="Rtable-cell" (click)="addToInputRow('4')">4</button>
-	<button class="Rtable-cell" (click)="addToInputRow('5')">5</button>
-	<button class="Rtable-cell" (click)="addToInputRow('6')">6</button>
-	<button class="Rtable-cell" (click)="addToInputRow('7')">7</button>
-	<button class="Rtable-cell" (click)="addToInputRow('8')">8</button>
-	<button class="Rtable-cell" (click)="addToInputRow('9')">9</button>
-	<button class="Rtable-cell" (click)="addToInputRow('0')">0</button>
-	<button class="Rtable-cell" (click)="addToInputRow('.')">.</button>
-	<button class="Rtable-cell" (click)="addToInputRow('+')">+</button>
-	<button class="Rtable-cell" (click)="addToInputRow('-')">-</button>
-	<button class="Rtable-cell" (click)="addToInputRow('*')">*</button>
-	<button class="Rtable-cell" (click)="addToInputRow('/')">/</button>
-	<button class="Rtable-cell" (click)="addToInputRow('%')">%</button>
-	<button class="Rtable-cell" (click)="clearInputRow();addToInputRow(calculate(input));">=</button>
+	<button class="Rtable-cell" (click)="addToInputRow('1');">1</button>
+	<button class="Rtable-cell" (click)="addToInputRow('2');">2</button>
+	<button class="Rtable-cell" (click)="addToInputRow('3');">3</button>
+	<button class="Rtable-cell" (click)="addToInputRow('4');">4</button>
+	<button class="Rtable-cell" (click)="addToInputRow('5');">5</button>
+	<button class="Rtable-cell" (click)="addToInputRow('6');">6</button>
+	<button class="Rtable-cell" (click)="addToInputRow('7');">7</button>
+	<button class="Rtable-cell" (click)="addToInputRow('8');">8</button>
+	<button class="Rtable-cell" (click)="addToInputRow('9');">9</button>
+	<button class="Rtable-cell" (click)="addToInputRow('0');">0</button>
+	<button class="Rtable-cell" (click)="addToInputRow('.');">.</button>
+	<button class="Rtable-cell" (click)="addToInputRow('+');">+</button>
+	<button class="Rtable-cell" (click)="addToInputRow('-');">-</button>
+	<button class="Rtable-cell" (click)="addToInputRow('*');">*</button>
+	<button class="Rtable-cell" (click)="addToInputRow('/');">/</button>
+	<button class="Rtable-cell" (click)="addToInputRow('%');">%</button>
+	<button class="Rtable-cell" (click)="showAnswer();">=</button>
 </div>
 <br />
 <footer>

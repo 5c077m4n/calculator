@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 
 const OPERATORS = {'+': 1, '-': 1, '*': 2, '/': 2, '%': 2};
 const ERROR_MESSAGE = '///// ERROR /////';
@@ -10,10 +10,18 @@ const ERROR_MESSAGE = '///// ERROR /////';
 })
 
 export class CalculatorComponent implements OnInit {
-	input: string = '';
+	input: string;
 
 	constructor() {}
-	ngOnInit() {}
+	ngOnInit() {
+		this.clearInputRow();
+	}
+	@HostListener('document:keypress', ['$event']) handleKeyboardEvent(event: KeyboardEvent): void {
+		if(this.isDigit(event.key) || (this.isOperator(event.key))) return this.addToInputRow(event.key);
+		if(event.key === 'Enter' || event.key === '=') return this.showAnswer();
+		if(event.key === 'Backspace' || event.key === 'Delete') return this.clearInputRow();
+		return;
+	}
 
 	// Helper functions for calculations
 	isOperator(char: string): boolean {
@@ -30,15 +38,14 @@ export class CalculatorComponent implements OnInit {
 	peek(arr: any[]): any {
 		return arr[arr.length - 1];
 	}
-	// Convert a string into number[]
+	// Convert a string into <any[]>
 	strToArr(expression: string): any[] {
-		let decFrac = 0, negExp = 0;
-		return expression
+		let error: boolean = false, decFrac: boolean = false, negExp: number = 0;
+		let result = expression
 			.split('')
-			.reduce((arrOut: any[], char) => {
+			.reduce((arrOut: any[], char): any[] => {
 				if(this.isDigit(char)) {
-					if(!decFrac)
-					{
+					if(!decFrac) {
 						arrOut[arrOut.length-1] *= 10;
 						arrOut[arrOut.length-1] += (+char);
 					}
@@ -49,38 +56,44 @@ export class CalculatorComponent implements OnInit {
 						arrOut[arrOut.length-1] /= Math.pow(10, negExp);
 					}
 				}
-				if(char === '.') decFrac = 1;
+				if(char === '.' && !decFrac) decFrac = true;
+				if(char === '.' && decFrac) {
+					error = true;
+					return;
+				}
 				if(this.isOperator(char)) {
 					arrOut.push(char);
 					arrOut.push(0);
-					decFrac = 0;
+					decFrac = false;
 					negExp = 0;
 				}
 				return arrOut;
-			}, [0]
-		);
+			}, [0]);
+		if(error) return undefined;
+		else return result;
 	}
-	// Turn number[] to Reverse Polish Notation
+	// Turn <any[]> to Reverse Polish Notation
 	toPostfix(expression: any[]): any[] {
 		let stack: any[] = [];
 		return expression
-			.reduce((output, token) => {
-				if(this.isNumeric(token)) output.push(token);
+			.reduce((arrOut, token) => {
+				if(this.isNumeric(token)) arrOut.push(token);
 				if(token in OPERATORS) {
-					while((this.peek(stack) in OPERATORS) && (OPERATORS[token] <= OPERATORS[this.peek(stack)])) output.push(stack.pop());
+					while((this.peek(stack) in OPERATORS) && (OPERATORS[token] <= OPERATORS[this.peek(stack)]))
+						arrOut.push(stack.pop());
 					stack.push(token);
 				}
-				if(token === '(') stack.push(token);
-				if(token === ')') {
-					while(this.peek(stack) !== '(') output.push(stack.pop());
-					stack.pop();
-				}
-				return output;
+				// if(token === '(') stack.push(token);
+				// if(token === ')') {
+				// 	while(this.peek(stack) !== '(') arrOut.push(stack.pop());
+				// 	stack.pop();
+				// }
+				return arrOut;
 			}, [])
 			.concat(stack.reverse());
 	};
 	// Solve an RPN expression
-	solvePostfix(postfixExp: any[]): Number {
+	solvePostfix(postfixExp: any[]): number {
 		let resultStack = [], num1 = 0, num2 = 0;
 		for(let i = 0; i < postfixExp.length; i++) {
 			if(this.isNumeric(postfixExp[i])) resultStack.push(postfixExp[i]);
@@ -104,30 +117,33 @@ export class CalculatorComponent implements OnInit {
 						resultStack.push(num2 % num1);
 						break;
 					default:
-						console.log('Unsupported opration');
+						this.showError();
 						return undefined;
 				}
 			}
 		}
 		return (resultStack.length > 1)? undefined : resultStack.pop();
 	}
-	calculate(expression: string): Number {
+	calculate(expression: string): number {
 		return this.solvePostfix(this.toPostfix(this.strToArr(expression)));
 	}
 
-	// Functions to edit i/o
+	// Functions to edit input row
 	addToInputRow(char: any): void {
 		this.input += char;
 	}
 	clearInputRow(): void {
 		this.input = '';
 	}
-	onKeydown(event): void {
-		if(this.isDigit(event.key) || (this.isOperator(event.key))) this.addToInputRow(event.key);
-		if(event.key === 'Enter') {
-			this.clearInputRow();
-			this.addToInputRow(this.calculate(this.input));
-		}
-		if(event.key === 'Backspace') this.clearInputRow();
+	showError(): void {
+		this.clearInputRow();
+		this.addToInputRow(ERROR_MESSAGE);
+		setTimeout(this.clearInputRow, 1500);
+	}
+	showAnswer(): void {
+		const result = this.calculate(this.input);
+		this.clearInputRow();
+		if(this.isNumeric(result)) return this.addToInputRow(result);
+		return this.showError();
 	}
 }
