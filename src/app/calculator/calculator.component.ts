@@ -129,11 +129,12 @@ export class CalculatorComponent implements OnInit {
 	}
 
 	// Functions to edit input row
-	addToInputRow(char: any): void {
-		this.input += char;
-	}
 	clearInputRow(): void {
 		this.input = '';
+	}
+	addToInputRow(char: any): void {
+		if(this.input === ERROR_MESSAGE) this.clearInputRow();
+		this.input += char;
 	}
 	showError(): void {
 		this.clearInputRow();
