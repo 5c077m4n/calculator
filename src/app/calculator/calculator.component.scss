@@ -1,0 +1,71 @@
+.Rtable {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 0 3em 0;
+    padding: 0;
+}
+.Rtable-cell {
+    box-sizing: border-box;
+    flex-grow: 1;
+    width: 100%;
+    padding: 0.8em 1.2em;
+    overflow: auto;
+    list-style: none;
+    border: solid 3px white;
+    background: rgba(112, 128, 144, 0.2);
+}
+.Rtable-result {
+    box-sizing: border-box;
+    flex-grow: 3;
+    width: 100%;
+    padding: 0.8em 1.2em;
+    overflow: auto;
+    list-style: none;
+    border: solid 3px white;
+    background: rgba(112, 128, 144, 0.2);
+}
+
+/* Table column sizing */
+.Rtable--3cols > .Rtable-cell {
+    width: 33.33%;
+}
+.Rtable--4cols > .Rtable-cell {
+    width: 25%;
+}
+.Rtable--5cols > .Rtable-cell {
+    width: 20%;
+}
+.Rtable--6cols > .Rtable-cell {
+    width: 16.6%;
+}
+
+/* Page styling */
+html {
+    height: 100%;
+    background-color: #EEE;
+}
+body {
+    box-sizing: border-box;
+    min-height: 100%;
+    margin: 0 auto;
+    padding: 2em;
+    max-width: 800px;
+    font-size: 1.2em;
+    background-color: white;
+    border: double 3px #DDD;
+    border-top: none;
+    border-bottom: none;
+}
+
+button {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background-color: transparent;
+}
+input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background-color: transparent;
+}
