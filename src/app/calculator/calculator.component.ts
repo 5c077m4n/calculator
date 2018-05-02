@@ -41,7 +41,6 @@ export class CalculatorComponent implements OnInit {
 	}
 	// Convert a string into <any[]>
 	strToArr(expression: string): any[] {
-		console.log(expression);
 		let decFrac: boolean = false, negExp: number = 0;
 		let result = expression
 			.split('')
